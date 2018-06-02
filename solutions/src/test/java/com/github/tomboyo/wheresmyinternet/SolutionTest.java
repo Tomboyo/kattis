@@ -1,6 +1,7 @@
 package com.github.tomboyo.wheresmyinternet;
 
 import static org.junit.Assert.*;
+import static com.github.tomboyo.Streams.*;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -29,11 +30,17 @@ public class SolutionTest {
     pipedOut.close();
   }
 
+  private Solution createSolution(
+      String sampleFile
+  ) throws Exception {
+    return new Solution(
+        streamResource(getClass(), sampleFile),
+        pipedOut);
+  }
+
   @Test
   public void noCables() throws Exception {
-    Solution solution = new Solution(
-        streamSample("no-cables"),
-        pipedOut);
+    Solution solution = createSolution("no-cables");
     solution.run();
 
     String result = readToString(pipedIn);
@@ -45,9 +52,7 @@ public class SolutionTest {
 
   @Test
   public void connected() throws Exception {
-    Solution solution = new Solution(
-        streamSample("connected"),
-        pipedOut);
+    Solution solution = createSolution("connected");
     solution.run();
 
     String result = readToString(pipedIn);
@@ -56,9 +61,7 @@ public class SolutionTest {
 
   @Test
   public void spanning() throws Exception {
-    Solution solution = new Solution(
-        streamSample("spanning"),
-        pipedOut);
+    Solution solution = createSolution("spanning");
     solution.run();
 
     String result = readToString(pipedIn);
@@ -67,9 +70,7 @@ public class SolutionTest {
 
   @Test
   public void houses5And6Disconnected() throws Exception {
-    Solution solution = new Solution(
-        streamSample("5-6-disconnected"),
-        pipedOut);
+    Solution solution = createSolution("5-6-disconnected");
     solution.run();
 
     String result = readToString(pipedIn);
@@ -80,9 +81,7 @@ public class SolutionTest {
 
   @Test
   public void largeNonConnected() throws Exception {
-    Solution solution = new Solution(
-        streamSample("large-nonconnected"),
-        pipedOut);
+    Solution solution = createSolution("large-nonconnected");
     solution.run();
 
     String result = readToString(pipedIn);
@@ -92,15 +91,5 @@ public class SolutionTest {
     assertTrue(result.contains("5"));
     assertTrue(result.contains("6"));
     assertEquals(5, result.split(System.lineSeparator()).length);
-  }
-
-  private InputStream streamSample(String fileName) throws FileNotFoundException {
-    return getClass().getResourceAsStream(fileName);
-  }
-
-  private String readToString(InputStream is) {
-    return new BufferedReader(new InputStreamReader(is))
-        .lines()
-        .collect(Collectors.joining(System.lineSeparator()));
   }
 }
