@@ -1,0 +1,20 @@
+plugins {
+  id 'java'
+}
+
+dependencies {
+  implementation project(":kattio")
+
+  testCompile(
+    'junit:junit:4.12'
+  )
+}
+
+test {
+  testLogging {
+    exceptionFormat = "full"
+    showStandardStreams = true
+  }
+
+  systemProperty 'com.github.tomboyo.samples.path', "${projectDir}/samples"
+}
