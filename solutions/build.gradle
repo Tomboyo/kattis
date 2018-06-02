@@ -15,6 +15,4 @@ test {
     exceptionFormat = "full"
     showStandardStreams = true
   }
-
-  systemProperty 'com.github.tomboyo.samples.path', "${projectDir}/samples"
 }

@@ -27,7 +27,7 @@
  * @author: Kattis
  */
 
-package com.open.kattis;
+package com.kattis.open;
 
 import java.util.StringTokenizer;
 import java.io.BufferedReader;

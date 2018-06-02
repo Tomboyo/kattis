@@ -1,1 +1,1 @@
-include ':wheres-my-internet', ":kattio"
+include ':solutions', ":kattio"

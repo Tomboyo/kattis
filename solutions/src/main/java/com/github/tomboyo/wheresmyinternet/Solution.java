@@ -1,6 +1,6 @@
 package com.github.tomboyo.wheresmyinternet;
 
-import com.open.kattis.Kattio;
+import com.kattis.open.Kattio;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;

@@ -95,11 +95,7 @@ public class SolutionTest {
   }
 
   private InputStream streamSample(String fileName) throws FileNotFoundException {
-    return new FileInputStream(
-        Paths.get(
-            System.getProperty("com.github.tomboyo.samples.path"),
-            fileName)
-        .toFile());
+    return getClass().getResourceAsStream(fileName);
   }
 
   private String readToString(InputStream is) {
