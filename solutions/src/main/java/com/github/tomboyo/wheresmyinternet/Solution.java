@@ -78,7 +78,7 @@ public class Solution {
       return true;
     }
 
-    if (countCables == maximumEdges(countHouses, 2)) {
+    if (countCables > edgesOfConnectedGraph(countHouses - 1)) {
       printConnected();
       return true;
     }
@@ -86,7 +86,7 @@ public class Solution {
     return false;
   }
 
-  private int maximumEdges(int n, int k) {
+  private long edgesOfConnectedGraph(long n) {
     return (n * (n - 1)) / 2;
   }
 
