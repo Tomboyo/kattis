@@ -6,4 +6,4 @@ We solve this problem by aggregating the input into a graph and performing bread
 
 The input gives us pairs of connected houses. We enter these into an adjacency-list format in order to perform breadth-first search, which then sets bits in a bit vector corresponding to discovered houses. After the BFS, any unset bits are interpreted as disconnected houses.
 
-We also make some short-circuit checks based on the size of the input to avoid performing BFS, though this unfortunately does not actually work on the kattis tests: When input is sufficiently large, we know every node must be connected to the source, and if the graph is devoid entirely of edges, we know all houses must be disconnected.
+We also make some short-circuit checks based on the size of the input to avoid performing BFS: When input is sufficiently large, we know every node must be connected to the source, and if the graph is devoid entirely of edges, we know all houses must be disconnected. This addition did not impact run-speed (the latter would be negligible, though the former could be substantial), so it is possible Kattis did not trip these conditions.
