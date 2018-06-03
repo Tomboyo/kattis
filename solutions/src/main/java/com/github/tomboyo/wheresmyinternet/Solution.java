@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 
 /*
+PROBLEM DESCRIPTION:
 A new town is being built far out in the country, and currently there are N
 houses. People have already started moving in. However, some of the houses
 aren’t connected to the internet yet, and naturally residents are outraged.
@@ -34,6 +35,22 @@ If all the houses are already connected to the internet, output one line
 containing the string Connected. Otherwise, output a list of house numbers
 in increasing order, one per line, representing the houses that are not yet
 connected to the internet.
+
+SOLUTION DESCRIPTION:
+We solve this problem by aggregating the input into a graph and performing
+breadth-first search to differentiate which houses are and are not connected to
+the source (house #1).
+
+The input gives us pairs of connected houses. We enter these into an adjacency-
+list format in order to perform breadth-first search, which then sets bits in a
+bit vector corresponding to discovered houses. After the BFS, any unset bits are
+interpreted as disconnected houses, if any.
+
+We also make some short-circuit checks based on the size of the input to avoid
+performing BFS, though this unfortunately does not actually work on the kattis
+tests: When input is sufficiently large, we know every node must be connected
+to the source, and if the graph is devoid entirely of edges, we know all houses
+must be disconnected.
 */
 public class Solution {
   private int countHouses, countCables;
