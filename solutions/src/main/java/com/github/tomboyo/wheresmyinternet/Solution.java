@@ -1,13 +1,3 @@
-package com.github.tomboyo.wheresmyinternet;
-
-import com.kattis.open.Kattio;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-
 /*
 PROBLEM DESCRIPTION:
 A new town is being built far out in the country, and currently there are N
@@ -44,7 +34,7 @@ the source (house #1).
 The input gives us pairs of connected houses. We enter these into an adjacency-
 list format in order to perform breadth-first search, which then sets bits in a
 bit vector corresponding to discovered houses. After the BFS, any unset bits are
-interpreted as disconnected houses, if any.
+interpreted as disconnected houses.
 
 We also make some short-circuit checks based on the size of the input to avoid
 performing BFS, though this unfortunately does not actually work on the kattis
@@ -52,6 +42,17 @@ tests: When input is sufficiently large, we know every node must be connected
 to the source, and if the graph is devoid entirely of edges, we know all houses
 must be disconnected.
 */
+
+package com.github.tomboyo.wheresmyinternet;
+
+import com.kattis.open.Kattio;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+
 public class Solution {
   private int countHouses, countCables;
   private Map<Integer, List<Integer>> adj;
