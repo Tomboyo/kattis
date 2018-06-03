@@ -7,4 +7,4 @@ The source directory contains packages named after kattis problems. Each such pa
 The documentation directory contains markdown files, one each per problem. They provide a link to the Kattis problem description and contain explanations of how my solutions solve the problems.
 
 # Kattio
-The Kattis site provides a Java IO utility called Kattio that they claim should be fast enough for all Kattis problems (unlike, say, Scanner). I've included the source (with minor modifications, such as a package) within the lib directory of this project.
+The Kattis site provides a Java IO utility called Kattio that they claim should be fast enough for all Kattis problems (unlike, say, Scanner). I've included the source (with minor modifications, such as a package name) within the kattio directory of this project.
