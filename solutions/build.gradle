@@ -16,3 +16,21 @@ test {
     showStandardStreams = true
   }
 }
+
+task runSolution(type:JavaExec) {
+    def problem = project.getProperty("run.problemName")
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.github.tomboyo.${problem}.Solution"
+    args = project.hasProperty("run.args")
+        ? project.getProperty("run.args")
+        : []
+    
+    if (project.hasProperty("run.stdIn.resource")) {
+      def root = "src/test/resources/com/github/tomboyo"
+      def resource = project.getProperty("run.stdIn.resource")
+      standardInput = file(
+        "${root}/${problem}/${resource}"
+      ).newInputStream()
+    }
+}
