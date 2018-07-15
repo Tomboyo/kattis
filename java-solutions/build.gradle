@@ -2,12 +2,12 @@ plugins {
   id 'java'
 }
 
-dependencies {
-  implementation project(":kattio")
+repositories {
+  jcenter()
+}
 
-  testCompile(
-    'junit:junit:4.12'
-  )
+dependencies {
+  testImplementation 'junit:junit:4.12'
 }
 
 test {
@@ -17,22 +17,24 @@ test {
   }
 }
 
-task runSolution(type:JavaExec) {
-  classpath = sourceSets.main.runtimeClasspath
+task runSolution(type: JavaExec) {
+  onlyIf {
+    project.hasProperty("run.problemName")
+  }
 
   def problem = project.hasProperty("run.problemName")
       ? project.getProperty("run.problemName")
-      : 'MISSING.PROBLEM.NAME'
+      : ""
   
   main = "com.github.tomboyo.${problem}.Solution"
-
   args = project.hasProperty("run.args")
       ? project.getProperty("run.args")
       : []
-  
-  if (project.hasProperty("run.stdIn.resource")) {
+  classpath = sourceSets.main.runtimeClasspath
+
+  if (project.hasProperty("run.stdIn")) {
     def root = "src/test/resources/com/github/tomboyo"
-    def resource = project.getProperty("run.stdIn.resource")
+    def resource = project.getProperty("run.stdIn")
     standardInput = file(
       "${root}/${problem}/${resource}"
     ).newInputStream()
