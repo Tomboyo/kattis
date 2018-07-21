@@ -35,8 +35,6 @@ class IntervalTree
   end
 
   def query(range, result_set = Set.new)
-    range = range.clone
-
     if IntRanges.intersect? @range, range
       result_set.merge @values
     end
