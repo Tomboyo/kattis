@@ -68,7 +68,8 @@ end
 # benchmarking
 class OtherBenchmarks < Minitest::Benchmark
   def self.bench_range
-    bench_exp 1_000, 100_000, 10
+    #bench_exp (2**14), (2**21), 2
+    bench_exp 10_000, 1_000_000, 10
   end
 
   def bench_initialize
@@ -77,6 +78,8 @@ class OtherBenchmarks < Minitest::Benchmark
     end
   end
 
+  # Large ranges can be inserted without exploring as many nodes. If a range
+  # covers the root, it is inserted at the root.
   def bench_insert_best_case
     assert_performance_constant do |n|
       @tree = IntervalTree.new 1..n
@@ -84,19 +87,45 @@ class OtherBenchmarks < Minitest::Benchmark
     end
   end
 
-  def bench_insert_worst_case
-    assert_performance_logarithmic do |n|
-      @tree = IntervalTree.new 1..n
-      100.times { @tree.insert 2..(n - 1), :value }
+  # A range containing a single value has to be inserted in a leaf. This forces
+  # the tree to explore from root to leaf, creating approximately log(n) nodes
+  # on the way.
+  #
+  # 1_000 reps and relaxed threshold because the runtime growth is subtle.
+  def bench_insert_worse_case
+    assert_performance_logarithmic 0.9 do |n|
+      1000.times do
+        tree = IntervalTree.new 1..n
+        tree.insert 1..1, :value
+      end
     end
   end
 
-  def bench_query_worst_case
-    tree = IntervalTree.new 1..100_000
-    (1..100_000).each { |i| tree.insert i..i, :value }
+  # Lerger ranges are inserted closer to the root, so queries similarly do not
+  # need to descend as deep into the tree. We can find the root's range in
+  # constant time.
+  def bench_query_best_case
+    assert_performance_constant do |n|
+      tree = IntervalTree.new 1..n
+      tree.insert 1..n, :value
+      100.times do
+        tree.query 1..n
+      end
+    end
+  end
 
-    assert_performance_logarithmic do |n|
-      100.times { tree.query 1..n }
+  # Single-value intervals are inserted in leafs, requiring queries to descend
+  # deep into the tree to locate them. There are log(n) layers in a tree to
+  # descend through, so queries should be at worst logarithmic.
+  #
+  # 1_000 reps and relaxed threshold because the runtime growth is subtle.
+  def bench_query_worst_case
+    assert_performance_logarithmic 0.9 do |n|
+      tree = IntervalTree.new 1..n
+      tree.insert 1..1, :value
+      1000.times do
+        tree.query 1..1
+      end
     end
   end
 end

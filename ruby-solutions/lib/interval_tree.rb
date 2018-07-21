@@ -7,13 +7,10 @@ class IntervalTree
   def initialize(range)
     @range = range
     @values = []
-    
-    # this is very expensive and should be removed.
-    @range.singleton_class.include(IntRanges)
   end
 
   def insert(range, value)
-    if @range.covered_by? range
+    if IntRanges.a_covers_b? @range, range
       @values << value
     else
       if (@left.nil? || @right.nil?) && @range.size > 1
@@ -24,11 +21,11 @@ class IntervalTree
         @right ||= IntervalTree.new((middle + 1)..high)
       end
 
-      if @left.range.intersect? range
+      if IntRanges.intersect? @left.range, range
         @left.insert range, value
       end
 
-      if @right.range.intersect? range
+      if IntRanges.intersect? @right.range, range
         @right.insert range, value
       end
     end
@@ -53,35 +50,46 @@ class IntervalTree
   def to_s
     "[#{@range}]=>#{@values.to_s}"
   end
+
+  def pretty_print(indent = 0, string = "")
+    string << " " * indent << to_s << "\n"
+    @left&.pretty_print(indent + 2, string)
+    @right&.pretty_print(indent + 2, string)
+    string
+  end
 end
 
 module IntRanges
-  # Returns the last included integer in the range. For two IntRanges,
-  #   (1..n).end == (1...(n + 1)).end
-  def end
-    if exclude_end?
-      super - 1
-    else
-      super
-    end
+  # Test if the first range covers the second range
+  # a_covers_b?(1..10, 2..9) == true
+  # a_covers_b?(1..10, 1..10) == true
+  # a_covers_b?(1..10, 1..11) == false
+  # a_covers_b?(1..10, 0..10) == false
+  def self.a_covers_b?(a, b)
+    b.first <= a.first &&
+        a.end <= b.end
   end
 
-  def covered_by?(other)
-    other.first <= self.first &&
-      self.end <= other.end
-  end
-
-  def intersect?(other)
-    self.end >= other.first &&
-        self.first <= other.end
-  end
-
+  # Test if two ranges intersect
+  # intersect?(1..2, 2..4) == true
+  # intersect?(1...2, 2..4) == false
   def self.intersect?(a, b)
     if a.nil? || b.nil?
-      return false
+      false
+    else
+      last_in(a) >= b.first &&
+          a.first <= last_in(b)
     end
-    
-    a.end >= b.first &&
-        a.first <= b.end
+  end
+
+  # get the last included integer in the given range
+  # last_in(1..2) == 2
+  # last_in(1...3) == 2
+  def self.last_in range
+    if range.exclude_end?
+      range.end - 1
+    else
+      range.end
+    end
   end
 end
