@@ -56,15 +56,3 @@ describe QueryOnArray do
     end
   end
 end
-
-class Benchmarks < Minitest::Benchmark
-  def self.bench_range
-    bench_exp 100, 100000, 10
-  end
-
-  def bench_initialize
-    assert_performance_linear do |n|
-      QueryOnArray.new(IntervalTree.new(1..n), n)
-    end
-  end
-end

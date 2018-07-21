@@ -1,5 +1,6 @@
 require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/benchmark'
 require 'interval_tree'
 
 describe IntervalTree do
@@ -61,5 +62,16 @@ describe IntervalTree do
       end
     end
   end
+end
 
+class Benchmarks < Minitest::Benchmark
+  def self.bench_range
+    bench_exp 100, 100000, 10
+  end
+
+  def bench_initialize
+    assert_performance_linear do |n|
+      IntervalTree.new(1..n)
+    end
+  end
 end
