@@ -10,26 +10,20 @@ class IntervalTree
     
     # this is very expensive and should be removed.
     @range.singleton_class.include(IntRanges)
-
-    prebuild_tree
-  end
-
-  private def prebuild_tree
-    low = @range.first
-    high = @range.end
-    if low < high
-      middle = (range.size / 2) + low - 1
-      @left = IntervalTree.new(low..middle)
-      @right = IntervalTree.new((middle + 1)..high)
-    else
-      @left = @right = nil
-    end
   end
 
   def insert(range, value)
     if @range.covered_by? range
       @values << value
     else
+      if (@left.nil? || @right.nil?) && @range.size > 1
+        low = @range.first
+        high = @range.end
+        middle = (@range.size / 2) + low - 1
+        @left ||= IntervalTree.new(low..middle)
+        @right ||= IntervalTree.new((middle + 1)..high)
+      end
+
       if @left.range.intersect? range
         @left.insert range, value
       end
@@ -43,18 +37,15 @@ class IntervalTree
   def query(range, result_set = Set.new)
     range = range.clone
 
-    # This is very expenseive and should be removed
-    range.singleton_class.include(IntRanges)
-
-    if @range.intersect? range
+    if IntRanges.intersect? @range, range
       result_set.merge @values
     end
       
-    if @left&.range&.intersect? range
+    if IntRanges.intersect? @left&.range, range
       @left.query range, result_set
     end
 
-    if @right&.range&.intersect? range
+    if IntRanges.intersect? @right&.range, range
       @right.query range, result_set
     end
 
@@ -85,5 +76,14 @@ module IntRanges
   def intersect?(other)
     self.end >= other.first &&
         self.first <= other.end
+  end
+
+  def self.intersect?(a, b)
+    if a.nil? || b.nil?
+      return false
+    end
+    
+    a.end >= b.first &&
+        a.first <= b.end
   end
 end

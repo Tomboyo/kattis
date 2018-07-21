@@ -64,14 +64,39 @@ describe IntervalTree do
   end
 end
 
-class Benchmarks < Minitest::Benchmark
+# Some of the bench* methods are not available yet, so we're not using spec for
+# benchmarking
+class OtherBenchmarks < Minitest::Benchmark
   def self.bench_range
-    bench_exp 100, 100000, 10
+    bench_exp 1_000, 100_000, 10
   end
 
   def bench_initialize
-    assert_performance_linear do |n|
-      IntervalTree.new(1..n)
+    assert_performance_constant do |n|
+      100.times { IntervalTree.new 1..n }
+    end
+  end
+
+  def bench_insert_best_case
+    assert_performance_constant do |n|
+      @tree = IntervalTree.new 1..n
+      100.times { @tree.insert 1..n, :value }
+    end
+  end
+
+  def bench_insert_worst_case
+    assert_performance_logarithmic do |n|
+      @tree = IntervalTree.new 1..n
+      100.times { @tree.insert 2..(n - 1), :value }
+    end
+  end
+
+  def bench_query_worst_case
+    tree = IntervalTree.new 1..100_000
+    (1..100_000).each { |i| tree.insert i..i, :value }
+
+    assert_performance_logarithmic do |n|
+      100.times { tree.query 1..n }
     end
   end
 end
