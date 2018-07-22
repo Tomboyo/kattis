@@ -56,3 +56,40 @@ describe QueryOnArray do
     end
   end
 end
+
+class Benchmarks < Minitest::Benchmark
+  def self.bench_range
+    [100, 500, 1_000, 5_000]
+  end
+
+  MaxRuntime = Proc.new do |samples, runtime|
+    #runtime[0] <= 0.333
+  end
+
+  def bench_mostly_updates
+    assert_performance MaxRuntime do |n|
+      q = QueryOnArray.new(IntervalTree.new(1..n), n)
+
+      n.times do
+        case rand
+        when 0.0...0.3
+          low = rand 0...n
+          high = rand low..n
+          #puts "Insert [#{low}..#{high}] => 1"
+          q.increment_range low..high
+        when 0.3...0.6
+          low = rand 0...n
+          high = rand low..n
+          #puts "Insert [#{low}..#{high}] => -1"
+          q.decrement_range low..high
+        else
+          low = rand 0...n
+          high = rand low..n
+          #puts "Query [#{low}..#{high}]"
+          q.eval_range low..high
+        end
+      end
+    end
+  end
+
+end

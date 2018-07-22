@@ -66,9 +66,8 @@ end
 
 # Some of the bench* methods are not available yet, so we're not using spec for
 # benchmarking
-class OtherBenchmarks < Minitest::Benchmark
+class Benchmarks < Minitest::Benchmark
   def self.bench_range
-    #bench_exp (2**14), (2**21), 2
     bench_exp 10_000, 1_000_000, 10
   end
 

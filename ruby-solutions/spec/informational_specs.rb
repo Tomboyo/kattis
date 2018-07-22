@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/benchmark'
 
-# Some performance observations to help invetigate bottlenecks. Inspect the
+# Some performance observations to help investigate bottlenecks. Inspect the
 # runtimes to get a feel for the cost of certain operations.
 class OnMyMachine < Minitest::Benchmark
 
