@@ -1,3 +1,5 @@
+require 'binary_search_tree'
+
 class Interval
   attr_accessor :low, :high
 
@@ -101,9 +103,8 @@ end
 class IntervalTree
 
   def initialize(entire_interval)
-    @interval_list = IntervalList.new(
-      entire_interval
-    )
+    @interval_list = IntervalList.new(entire_interval)
+    @index = BinarySearchTree.new
   end
 
   def to_s
@@ -113,6 +114,7 @@ class IntervalTree
   def insert(interval, value)
     each_in_interval(interval) do |node|
       node.split_around!(interval).each do |subnode|
+        @index.put subnode.interval.low, subnode
         subnode.values << value unless
             interval.disjoint? subnode.interval
       end
@@ -129,12 +131,7 @@ class IntervalTree
   end
 
   private def find_first(point)
-    #TODO: use a BST
-    current = @interval_list
-    while current&.next&.interval&.low&. <= point
-      current = current.next
-    end
-    current
+    @index.findLargestAtMost(point) || @interval_list
   end
 
   def get interval
