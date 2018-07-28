@@ -57,20 +57,20 @@ describe BinarySearchTree do
     describe 'when the tree is not empty' do
 
       before do
-        @bst.put 5, 5
-        @bst.put 7, 7
-        @bst.put 3, 3
+        @bst.put 5, "5"
+        @bst.put 7, "7"
+        @bst.put 3, "3"
       end
 
       it 'returns the largest number <= the key' do
-        assert_equal 7, @bst.findLargestAtMost(8)
-        assert_equal 7, @bst.findLargestAtMost(7)
+        assert_equal "7", @bst.findLargestAtMost(8)
+        assert_equal "7", @bst.findLargestAtMost(7)
 
-        assert_equal 5, @bst.findLargestAtMost(6)
-        assert_equal 5, @bst.findLargestAtMost(5)
+        assert_equal "5", @bst.findLargestAtMost(6)
+        assert_equal "5", @bst.findLargestAtMost(5)
 
-        assert_equal 3, @bst.findLargestAtMost(4)
-        assert_equal 3, @bst.findLargestAtMost(3)
+        assert_equal "3", @bst.findLargestAtMost(4)
+        assert_equal "3", @bst.findLargestAtMost(3)
       end
 
       describe 'when the key is smaller than all tree elements' do

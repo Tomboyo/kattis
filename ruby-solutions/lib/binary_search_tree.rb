@@ -74,7 +74,7 @@ class BinarySearchTree
 
     if current.key > key
       if previous.key < key
-        previous.key
+        previous.value
       else
         nil
       end
