@@ -30,7 +30,7 @@ class Interval
   end
 
   def to_s
-    "[#{@low},  #{@high}]"
+    "[#{@low}, #{@high}]"
   end
 end
 
@@ -47,14 +47,6 @@ class  IntervalList
     @next = next_node
   end
 
-  def low
-    @interval.low
-  end
-
-  def high
-    @interval.high
-  end
-
   # Subdivides the current list-node in-place about the
   # given interval and returns an array containing the
   # sublist nodes thus created or modified.
@@ -67,36 +59,29 @@ class  IntervalList
         @interval.disjoint?(interval)
       [self]
     elsif interval.proper_subinterval_of? @interval
-      trisect_around! interval
+      bisect_at! interval.low - 1
+      @next.bisect_at! interval.high
       [self, @next, @next.next]
     else
-      if low < interval.low
-        bisect_after! interval.low - 1
+      if @interval.low < interval.low
+        bisect_at! interval.low - 1
       else
-        bisect_after! interval.high
+        bisect_at! interval.high
       end
       [self, @next]
     end
   end
 
-  private def trisect_around! interval
-    tmp_next = @next
-    tmp_high = high
-
-    @interval.high = interval.low - 1
-    @next = IntervalList.new(
-      interval,
-      @values.clone,
-      IntervalList.new(
-        Interval.new(interval.high + 1, tmp_high),
-        @values.clone,
-        tmp_next
-      )
-    )
-  end
-
-  private def bisect_after! point
-    tmp_high = high
+  # Bisect this interval list at the given point. This
+  # modifies the current list in-place and creates a new
+  # list to hold the other half of the original interval.
+  # The new list interval excludes the point, whereas this
+  # list interval includes it.
+  #
+  # < 1..5 >.bisect_at! 3
+  #     #=> < 1..3 next:<4..5> >
+  protected def bisect_at! point
+    tmp_high = @interval.high
     tmp_next = @next
 
     @interval.high = point
@@ -108,7 +93,7 @@ class  IntervalList
   end
 
   def to_s
-    "<#{@interval} #{@values} #{@next&.interval}>"
+    "<#{@interval} values:#{@values} next:#{@next&.interval}>"
   end
 end
 
@@ -136,7 +121,7 @@ class IntervalTree
 
   def each_in_interval(interval)
     current = find_first(interval.low)
-    while current&.low&. <= interval.high
+    while current&.interval&.low&. <= interval.high
       tmp_next = current.next
       yield current
       current = tmp_next
@@ -146,7 +131,7 @@ class IntervalTree
   private def find_first(point)
     #TODO: use a BST
     current = @interval_list
-    while current&.next&.low&. <= point
+    while current&.next&.interval&.low&. <= point
       current = current.next
     end
     current
