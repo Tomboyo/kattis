@@ -1,5 +1,3 @@
-require 'set'
-
 class Interval
   attr_accessor :low, :high
 
