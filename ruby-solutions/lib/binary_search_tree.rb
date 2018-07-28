@@ -86,4 +86,11 @@ class BinarySearchTree
   def to_s
     "<key:#{@key} value:#{@value} left:#{@left} right: #{@right}>"
   end
+
+  def pretty_to_s(level = 0)
+    indent = " " * level * 2
+    "key: #{@key}, value: #{@value}"\
+      "\n#{indent}left: #{@left&.pretty_to_s(level + 1)}"\
+      "\n#{indent}right: #{@right&.pretty_to_s(level + 1)}"
+  end
 end
