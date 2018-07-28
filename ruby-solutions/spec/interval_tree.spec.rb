@@ -2,6 +2,7 @@ require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/benchmark'
 require 'interval_tree'
+require 'set'
 
 describe IntervalTree do
 
@@ -30,9 +31,9 @@ describe IntervalTree do
       @tree.insert(Interval.new(2, 2), "2..2")
       @tree.insert(Interval.new(9, 9), "9..9")
 
-      values = []
+      values = Set.new
       @tree.get(Interval.new(2, 9)) do |i, v|
-        values.push(*v)
+        values.merge(v)
       end
 
       assert_equal true, values.include?("1..10")
@@ -46,12 +47,12 @@ describe IntervalTree do
       @tree.insert(Interval.new(1, 1), "1..1")
       @tree.insert(Interval.new(10, 10), "10..10")
 
-      v = []
+      values = Set.new
       @tree.get(Interval.new(2, 9)) do |i, v|
-        v.push(*v)
+        values.merge(v)
       end
 
-      assert_equal true, v.empty?
+      assert_equal true, values.empty?
     end
   end
 end
