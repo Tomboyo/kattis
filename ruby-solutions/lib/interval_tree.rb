@@ -37,6 +37,8 @@ class Interval
 end
 
 class  IntervalList
+  include Enumerable
+
   attr_accessor :interval, :values, :next
 
   def initialize(interval, values = [], next_node = nil)
@@ -94,8 +96,16 @@ class  IntervalList
     )
   end
 
+  def each
+    current = self
+    while current
+      yield current
+      current = current.next
+    end
+  end
+
   def to_s
-    "<#{@interval} values:#{@values} next:#{@next&.interval}>"
+    "(#{@interval}: #{@values})"
   end
 end
 
@@ -138,5 +148,15 @@ class IntervalTree
     each_in_interval(interval) do |node|
       yield node.interval, node.values
     end
+  end
+
+  def pretty_to_s
+    intervals = @interval_list.map do |it|
+      it.to_s
+    end.join(" -> ")
+    <<~PRETTY
+      Intervals: #{intervals}
+      Index: #{@index.pretty_to_s}
+    PRETTY
   end
 end
