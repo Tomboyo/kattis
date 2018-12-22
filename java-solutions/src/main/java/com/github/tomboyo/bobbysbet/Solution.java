@@ -1,60 +1,80 @@
 package com.github.tomboyo.bobbysbet;
 
-import com.kattis.open.Kattio;
 import java.io.*;
+import java.util.stream.Stream;
 import java.util.function.Function;
 
-public class Solution {
-  private Kattio kattio;
+import com.kattis.open.Kattio;
 
-  Solution() {
-    this(System.in, System.out);
-  }
+public final class Solution {
 
-  Solution(InputStream input, OutputStream output) {
-    this.kattio = new Kattio(input, output);
-  }
+  private Solution() {}
 
   public static void main(String[] args) {
-    new Solution().run();
+    Solution.run(System.in, System.out);
   }
 
-  public void run() {
-    int numberOfCases = kattio.getInt();
-    while (numberOfCases-- > 0) {
-      printOutputForNextCase();
-    }
-
+  public static void run(InputStream in, OutputStream out) {
+    Kattio kattio = new Kattio(in, out);
+    final int linesOfInput = kattio.getInt();
+    Stream
+      .generate(() -> new Input(
+        kattio.getInt(),
+        kattio.getInt(),
+        kattio.getInt(),
+        kattio.getInt(),
+        kattio.getInt()
+      ))
+      .limit(linesOfInput)
+      .map(Solution::solve)
+      .forEach(solution -> kattio.println(solution));
     kattio.close();
   }
 
-  private void printOutputForNextCase() {
-    int minimumRoll = kattio.getInt();
-    int sidesOnDie = kattio.getInt();
-    int minimumSuccesses = kattio.getInt();
-    int maximumRolls = kattio.getInt();
-    int payoff = kattio.getInt();
+  private static class Input {
+    public final int minimumRoll;
+    public final int sidesOnDie;
+    public final int minimumSuccesses;
+    public final int maximumRolls;
+    public final int payoff;
 
-    if (isGoodBet(
-        estimatedNumberOfSuccesses(
-            sidesOnDie,
-            minimumRoll,
-            maximumRolls,
-            minimumSuccesses),
-        payoff))
-      kattio.println("yes");
-    else
-      kattio.println("no");
+    Input(
+      int minimumRoll,
+      int sidesOnDie,
+      int minimumSuccesses,
+      int maximumRolls,
+      int payoff
+    ) {
+      this.minimumRoll = minimumRoll;
+      this.sidesOnDie = sidesOnDie;
+      this.minimumSuccesses = minimumSuccesses;
+      this.maximumRolls = maximumRolls;
+      this.payoff = payoff;
+    }
   }
 
-  static boolean isGoodBet(
+  public static String solve(Input input) {
+    double estimatedSuccesses = estimatedNumberOfSuccesses(
+      input.sidesOnDie,
+      input.minimumRoll,
+      input.maximumRolls,
+      input.minimumSuccesses
+    );
+
+    if (isGoodBet(estimatedSuccesses, input.payoff))
+      return "yes";
+    else
+      return "no";
+  }
+
+  private static boolean isGoodBet(
     double estimatedSuccesses,
     int payoff
   ) {
     return estimatedSuccesses * payoff > 1.0;
   }
 
-  static double estimatedNumberOfSuccesses(
+  private static double estimatedNumberOfSuccesses(
     int sidesOnDie,
     int minimumRoll,
     int maximumRolls,
@@ -75,7 +95,8 @@ public class Solution {
   private static double summation(
       int from,
       int to,
-      Function<Integer, Double> f) {
+      Function<Integer, Double> f
+  ) {
     double sum = 0;
     for (int i = from; i <= to; i++) {
       sum += f.apply(i);

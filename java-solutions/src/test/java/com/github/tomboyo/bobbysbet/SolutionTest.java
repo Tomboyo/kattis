@@ -5,6 +5,7 @@ import static com.github.tomboyo.Streams.streamResource;
 import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 
+import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
@@ -46,13 +47,16 @@ public class SolutionTest {
     assertEquals(expected, result);
   }
 
-  private Solution createSolution(
+  private Runnable createSolution(
     String sampleFile,
     PipedOutputStream pipedOut
   ) throws Exception {
-    return new Solution(
-        streamResource(getClass(), sampleFile),
-        pipedOut);
+    try {
+      final InputStream in = streamResource(getClass(), sampleFile);
+      return () -> Solution.run(in, pipedOut);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Test
