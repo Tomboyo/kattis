@@ -31,7 +31,7 @@ public final class Solution {
     kattio.close();
   }
 
-  private static class Input {
+  static class Input {
     public final int minimumRoll;
     public final int sidesOnDie;
     public final int minimumSuccesses;
