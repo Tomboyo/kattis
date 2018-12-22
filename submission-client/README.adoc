@@ -1,0 +1,3 @@
+This is the submission client distributed by Kattis, found https://open.kattis.com/help/submit[here].
+
+I have made small modifications to the script.
