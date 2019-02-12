@@ -1,4 +1,4 @@
-package com.github.tomboyo.wheresmyinternet;
+package wheresmyinternet;
 
 import com.kattis.open.Kattio;
 import java.util.List;

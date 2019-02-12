@@ -1,4 +1,4 @@
-package com.github.tomboyo.bobbysbet;
+package bobbysbet;
 
 import java.io.*;
 import java.util.stream.Stream;

@@ -1,11 +1,6 @@
-.gradle
 .idea
-.settings
-.vscode
-.project
-.classpath
+
 *.class
 *.iml
-build
-bin
-out
+
+target

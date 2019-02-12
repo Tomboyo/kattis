@@ -1,4 +1,4 @@
-package com.github.tomboyo.tenkindsofpeople;
+package tenkindsofpeople;
 
 import com.kattis.open.Kattio;
 import java.io.InputStream;
