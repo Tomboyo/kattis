@@ -3,4 +3,6 @@
 *.class
 *.iml
 
+perf.data
+
 target

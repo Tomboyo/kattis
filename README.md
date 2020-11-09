@@ -6,7 +6,7 @@ Solutions to problems are in `/solutions/<problem-name>`, where problem-name cor
 Utility code (like Kattio) is located until `util/`.  This code is re-used between solutions.
 
 # Building
-Because every file has to be uploaded to kattis and compiled there, it's usually simpler to avoid toolchains like `gradle` or `cargo` to build and run locally.
+Because every file has to be uploaded to kattis and compiled there, it is sometimes simpler to avoid toolchains like `gradle` or `cargo` to build and run locally. If a directory does not contain a build tool metadata, then follow the instructions below.
 
 ## Java
 ```
